@@ -1,0 +1,28 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: user
+  datasource:
+    url: jdbc:mysql://localhost:3306/helabojun
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: false
+  liquibase:
+    enabled: true
+    default-schema: helabojun
+    change-log: classpath:changelog/db.change.log.master.xml
+
+eureka:
+  client:
+    registerWithEreka: true
+    fetchRegistry: true
+    serviceUrl:
+      serviceUrl: http://localhost:8761/eureka
+
