@@ -4,6 +4,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <property name="author-rusiru" value="rusiru"/>
+
     <property name="now" value="now()" dbms="mysql"/>
     <property name="now" value="now()" dbms="h2"/>
 
@@ -13,13 +14,16 @@
     <property name="jsonType" value="JSON" dbms="mysql"/>
     <property name="jsonType" value="LONGTEXT" dbms="h2"/>
 
+    <property name="uuidType" value="varchar(40)" dbms="mysql"/>
+    <property name="uuidType" value="varchar(40)" dbms="h2"/>
+
     <changeSet id="R1" author="${author-rusiru}">
         <createTable tableName="section">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="code" type="varchar(10)">
-                <constraints nullable="false"/>
+            <column name="uuid" type="${uuidType}">
+                <constraints unique="true" nullable="false"/>
             </column>
             <column name="description" type="varchar(50)">
                 <constraints nullable="false"/>
