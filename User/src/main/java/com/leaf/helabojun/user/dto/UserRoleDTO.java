@@ -5,8 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserRoleDtO extends CommonDTO{
-    private Long id;
+public class UserRoleDTO extends CommonDTO{
     private String description;
     private String status;
 

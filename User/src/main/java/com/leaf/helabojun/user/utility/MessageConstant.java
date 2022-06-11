@@ -21,4 +21,13 @@ public class MessageConstant {
     public static final String  LOCATION_TYPE_NOT_FOUND="location.type.not.found";
     public static final String  LOCATION_TYPE_FOUND="location.type.found";
     public static final String  LOCATION_TYPE_LIST_FOUND="location.type.list.found";
+
+    public static final String  USER_ROLE_SAVE_SUCCESS="user.role.save.success";
+    public static final String  USER_ROLE_UPDATE_SUCCESS="user.role.update.success";
+    public static final String  USER_ROLE_DELETE_SUCCESS="user.role.delete.success";
+    public static final String  USER_ROLE_EXISTS="user.role.exist";
+    public static final String  USER_ROLE_NOT_FOUND="user.role.not.found";
+    public static final String  USER_ROLE_FOUND="user.role.found";
+    public static final String  USER_ROLE_LIST_FOUND="user.role.list.found";
+    public static final String  USER_ROLE_USED_BY_USER="user.role.used.by.user";
 }

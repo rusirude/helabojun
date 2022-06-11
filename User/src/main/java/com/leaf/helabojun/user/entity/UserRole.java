@@ -14,6 +14,8 @@ public class UserRole extends Common{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
     @Column(name = "description", nullable = false)
     private String description;
     @Column(name = "status", nullable = false)
