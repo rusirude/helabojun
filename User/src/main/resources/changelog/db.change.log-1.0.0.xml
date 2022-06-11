@@ -51,4 +51,38 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="1.0.2" author="${author-rusiru}">
+        <createTable tableName="location_type">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="uuid" type="${uuidType}">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="description" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="${dateType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_sys_time" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="${dateType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_sys_time" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
