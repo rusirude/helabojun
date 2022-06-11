@@ -163,11 +163,11 @@ public class SectionServiceImpl implements SectionService {
             if (Objects.nonNull(Optional.ofNullable(searchRequestDTO.getOrderBy()).orElse(null)) &&
                     Objects.nonNull(Optional.ofNullable(searchRequestDTO.getOrder()).orElse(null)))
                 pageRequest = PageRequest.of(
-                        Optional.ofNullable(searchRequestDTO.getStart()).orElse(Integer.MIN_VALUE), Optional.ofNullable(searchRequestDTO.getLimit()).orElse(Integer.MAX_VALUE),
+                        Optional.ofNullable(searchRequestDTO.getStart()).orElse(0), Optional.ofNullable(searchRequestDTO.getLimit()).orElse(Integer.MAX_VALUE),
                         Sort.by(Sort.Direction.valueOf(searchRequestDTO.getOrder()), searchRequestDTO.getOrderBy())
                 );
             else
-                pageRequest = PageRequest.of(Optional.ofNullable(searchRequestDTO.getStart()).orElse(Integer.MIN_VALUE), Optional.ofNullable(searchRequestDTO.getLimit()).orElse(Integer.MAX_VALUE));
+                pageRequest = PageRequest.of(Optional.ofNullable(searchRequestDTO.getStart()).orElse(0), Optional.ofNullable(searchRequestDTO.getLimit()).orElse(Integer.MAX_VALUE));
 
 
             List<CommonListDTO<SectionDTO>> sections = sectionRepository.findAll(sectionSpecification.generateSearchCriteria(searchRequestDTO), pageRequest).getContent()

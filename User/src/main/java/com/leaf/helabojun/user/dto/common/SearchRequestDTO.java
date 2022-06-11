@@ -10,7 +10,6 @@ public class SearchRequestDTO {
     private Integer limit;
     private String orderBy;
     private String order;
-    private boolean dataTable;
     private boolean detailed;
     private String key1;
     private String key2;

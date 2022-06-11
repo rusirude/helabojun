@@ -18,13 +18,13 @@ public class SectionSpecification {
         return (Specification<Section>) (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            if (!Optional.ofNullable(searchRequestDTO.getKey1()).orElse("").isEmpty())
+                predicates.add(criteriaBuilder.equal(root.get(Section_.DESCRIPTION), searchRequestDTO.getKey1()));
+
             if (!Optional.ofNullable(searchRequestDTO.getKey2()).orElse("").isEmpty())
-                predicates.add(criteriaBuilder.equal(root.get(Section_.DESCRIPTION), searchRequestDTO.getKey2()));
+                predicates.add(criteriaBuilder.equal(root.get(Section_.STATUS), searchRequestDTO.getKey2()));
 
-            if (!Optional.ofNullable(searchRequestDTO.getKey3()).orElse("").isEmpty())
-                predicates.add(criteriaBuilder.equal(root.get(Section_.STATUS), searchRequestDTO.getKey3()));
-
-            predicates.add(criteriaBuilder.notEqual(root.get(Section_.STATUS), StatusEnum.DELETE));
+            predicates.add(criteriaBuilder.notEqual(root.get(Section_.STATUS), StatusEnum.DELETE.getCode()));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
