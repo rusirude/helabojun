@@ -17,7 +17,7 @@
     <property name="uuidType" value="varchar(40)" dbms="mysql"/>
     <property name="uuidType" value="varchar(40)" dbms="h2"/>
 
-    <changeSet id="R1" author="${author-rusiru}">
+    <changeSet id="1.0.1" author="${author-rusiru}">
         <createTable tableName="section">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"/>

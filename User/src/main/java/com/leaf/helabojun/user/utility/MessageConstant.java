@@ -12,4 +12,5 @@ public class MessageConstant {
     public static final String  SECTION_EXISTS="section.exist";
     public static final String  SECTION_NOT_FOUND="section.not.found";
     public static final String  SECTION_FOUND="section.found";
+    public static final String  SECTION_LIST_FOUND="section.list.found";
 }
