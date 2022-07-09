@@ -7,12 +7,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum  StatusEnum {
 
-    ACTIVE("ACTIVE","Active"),
-    INACTIVE("INACTIVE","In Active"),
-    DELETE("DELETE","Delete");
+    ACTIVE("ACTIVE"),
+    INACTIVE("INACTIVE"),
+    DELETE("DELETE");
 
     private String code;
-    private String description;
 
 
 }

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.Optional;
 
 public interface SectionRepository extends JpaRepository<Section, Long>, JpaSpecificationExecutor<Section> {
-    Optional<Section> findByDescriptionAndStatusNot(String description, String status);
+    Optional<Section> findByDescriptionAndStatusCodeNot(String description, String status);
 
-    Optional<Section> findByUuidAndStatusNot(String uuid, String status);
+    Optional<Section> findByUuidAndStatusCodeNot(String uuid, String status);
 }

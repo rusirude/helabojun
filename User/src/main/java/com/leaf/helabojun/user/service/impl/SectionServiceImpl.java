@@ -17,6 +17,7 @@ import com.leaf.helabojun.user.service.SectionService;
 import com.leaf.helabojun.user.utility.CommonFunction;
 import com.leaf.helabojun.user.utility.MessageConstant;
 import com.leaf.helabojun.user.utility.MessageResource;
+import com.leaf.helabojun.user.utility.StatusUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -38,6 +39,7 @@ public class SectionServiceImpl implements SectionService {
     private ModelMapper modelMapper;
     private CommonFunction commonFunction;
     private MessageResource messageResource;
+    private StatusUtil statusUtil;
 
     private SectionRepository sectionRepository;
     private SectionSpecification sectionSpecification;
@@ -47,13 +49,14 @@ public class SectionServiceImpl implements SectionService {
     public ResponseDTO<String, SectionDTO> saveSection(ChannelEnum channel, String username, SectionDTO sectionDTO) {
         try {
 
-            Section section = sectionRepository.findByDescriptionAndStatusNot(sectionDTO.getDescription(), StatusEnum.DELETE.getCode())
+            Section section = sectionRepository.findByDescriptionAndStatusCodeNot(sectionDTO.getDescription(), StatusEnum.DELETE.getCode())
                     .orElse(new Section());
             if (Objects.nonNull(section.getId()))
                 throw new DataConflictException(messageResource.getMessage(MessageConstant.SECTION_EXISTS, new Object[]{sectionDTO.getDescription()}));
 
             modelMapper.map(sectionDTO, section);
             section.setUuid(commonFunction.getUuid());
+            section.setStatus(statusUtil.getStatus(sectionDTO.getStatus()));
             commonFunction.populateInsert(section, username);
             sectionRepository.save(section);
 
@@ -77,15 +80,15 @@ public class SectionServiceImpl implements SectionService {
     public ResponseDTO<String, SectionDTO> updateSection(ChannelEnum channel, String uuid, SectionDTO sectionDTO, String username) {
         try {
 
-            Section section = sectionRepository.findByUuidAndStatusNot(uuid, StatusEnum.DELETE.getCode())
+            Section section = sectionRepository.findByUuidAndStatusCodeNot(uuid, StatusEnum.DELETE.getCode())
                     .orElseThrow(() -> new DataNotFoundException(messageResource.getMessage(MessageConstant.SECTION_NOT_FOUND)));
 
-            if (sectionRepository.findByDescriptionAndStatusNot(sectionDTO.getDescription(), StatusEnum.DELETE.getCode()).isPresent())
+            if (sectionRepository.findByDescriptionAndStatusCodeNot(sectionDTO.getDescription(), StatusEnum.DELETE.getCode()).isPresent())
                 throw new DataConflictException(messageResource.getMessage(MessageConstant.SECTION_EXISTS, new Object[]{sectionDTO.getDescription()}));
 
             String previousSectionDescription = section.getDescription();
             section.setDescription(sectionDTO.getDescription());
-            section.setStatus(sectionDTO.getStatus());
+            section.setStatus(statusUtil.getStatus(sectionDTO.getStatus()));
 
             commonFunction.populateUpdate(section, username);
             sectionRepository.save(section);
@@ -110,10 +113,10 @@ public class SectionServiceImpl implements SectionService {
     public ResponseDTO<String, SectionDTO> deleteSection(ChannelEnum channel, String uuid, String username) {
         try {
 
-            Section section = sectionRepository.findByUuidAndStatusNot(uuid, StatusEnum.DELETE.getCode())
+            Section section = sectionRepository.findByUuidAndStatusCodeNot(uuid, StatusEnum.DELETE.getCode())
                     .orElseThrow(() -> new DataNotFoundException(messageResource.getMessage(MessageConstant.SECTION_NOT_FOUND)));
 
-            section.setStatus(StatusEnum.DELETE.getCode());
+            section.setStatus(statusUtil.getStatus(StatusEnum.DELETE.getCode()));
             commonFunction.populateUpdate(section, username);
             sectionRepository.save(section);
 
@@ -136,7 +139,7 @@ public class SectionServiceImpl implements SectionService {
     public ResponseDTO<String, SectionDTO> findSection(ChannelEnum channel, String uuid) {
         try {
 
-            Section section = sectionRepository.findByUuidAndStatusNot(uuid, StatusEnum.DELETE.getCode())
+            Section section = sectionRepository.findByUuidAndStatusCodeNot(uuid, StatusEnum.DELETE.getCode())
                     .orElseThrow(() -> new DataNotFoundException(messageResource.getMessage(MessageConstant.SECTION_NOT_FOUND)));
 
             return new ResponseDTO<>(
@@ -144,7 +147,7 @@ public class SectionServiceImpl implements SectionService {
                     ResponseEnum.SUCCESS,
                     messageResource.getMessage(MessageConstant.SECTION_FOUND, new Object[]{section.getDescription()}),
                     section.getUuid(),
-                    modelMapper.map(section, SectionDTO.class));
+                    mapToDto(section));
 
         } catch (DataNotFoundException e) {
             log.info(e.getMessage());
@@ -172,7 +175,7 @@ public class SectionServiceImpl implements SectionService {
 
             List<CommonListDTO<SectionDTO>> sections = sectionRepository.findAll(sectionSpecification.generateSearchCriteria(searchRequestDTO), pageRequest).getContent()
                     .stream()
-                    .map(section -> new CommonListDTO<>(section.getUuid(), modelMapper.map(section, SectionDTO.class)))
+                    .map(section -> new CommonListDTO<>(section.getUuid(), mapToDto(section)))
                     .collect(Collectors.toList());
 
             Long fullCount = sectionRepository.count(sectionSpecification.generateSearchCriteria(searchRequestDTO));
@@ -189,5 +192,11 @@ public class SectionServiceImpl implements SectionService {
             log.error(ex.getMessage());
             throw ex;
         }
+    }
+
+    private SectionDTO mapToDto(Section section){
+        SectionDTO sectionDTO = modelMapper.map(section, SectionDTO.class);
+        sectionDTO.setStatus(section.getStatus().getDescription());
+        return sectionDTO;
     }
 }

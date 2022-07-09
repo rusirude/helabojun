@@ -17,6 +17,20 @@
     <property name="uuidType" value="varchar(40)" dbms="mysql"/>
     <property name="uuidType" value="varchar(40)" dbms="h2"/>
 
+    <changeSet id="1.0.0" author="${author-rusiru}">
+        <createTable tableName="status">
+            <column name="code" type="varchar(10)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="description" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
     <changeSet id="1.0.1" author="${author-rusiru}">
         <createTable tableName="section">
             <column name="id" type="int" autoIncrement="true">
@@ -29,7 +43,11 @@
                 <constraints nullable="false"/>
             </column>
             <column name="status" type="varchar(10)">
-                <constraints nullable="false"/>
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_section_status"
+                        referencedTableName="status"
+                        referencedColumnNames="code"/>
             </column>
             <column name="created_by" type="varchar(25)">
                 <constraints nullable="false"/>
@@ -63,7 +81,11 @@
                 <constraints nullable="false"/>
             </column>
             <column name="status" type="varchar(10)">
-                <constraints nullable="false"/>
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_location_type_status"
+                        referencedTableName="status"
+                        referencedColumnNames="code"/>
             </column>
             <column name="created_by" type="varchar(25)">
                 <constraints nullable="false"/>
@@ -97,7 +119,11 @@
                 <constraints nullable="false"/>
             </column>
             <column name="status" type="varchar(10)">
-                <constraints nullable="false"/>
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_user_role_status"
+                        referencedTableName="status"
+                        referencedColumnNames="code"/>
             </column>
             <column name="created_by" type="varchar(25)">
                 <constraints nullable="false"/>

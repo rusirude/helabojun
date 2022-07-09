@@ -18,7 +18,8 @@ public class Section extends Common{
     private String uuid;
     @Column(name = "description", nullable = false)
     private String description;
-    @Column(name = "status", nullable = false)
-    private String status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status", nullable = false)
+    private Status status;
 
 }

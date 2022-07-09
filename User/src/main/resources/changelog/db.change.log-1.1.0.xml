@@ -1,0 +1,38 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <property name="author-rusiru" value="rusiru"/>
+
+    <property name="now" value="now()" dbms="mysql"/>
+    <property name="now" value="now()" dbms="h2"/>
+
+    <property name="dateType" value="DATETIME" dbms="mysql"/>
+    <property name="dateType" value="TIMESTAMP" dbms="h2"/>
+
+    <property name="jsonType" value="JSON" dbms="mysql"/>
+    <property name="jsonType" value="LONGTEXT" dbms="h2"/>
+
+    <property name="uuidType" value="varchar(40)" dbms="mysql"/>
+    <property name="uuidType" value="varchar(40)" dbms="h2"/>
+
+    <changeSet id="1.1.0" author="${author-rusiru}">
+        <insert tableName="status">
+            <column name="code" value="ACTIVE"/>
+            <column name="description" value="Active"/>
+            <column name="category" value="DEFAULT"/>
+        </insert>
+        <insert tableName="status">
+            <column name="code" value="INACTIVE"/>
+            <column name="description" value="In Active"/>
+            <column name="category" value="DEFAULT"/>
+        </insert>
+        <insert tableName="status">
+            <column name="code" value="DELETE"/>
+            <column name="description" value="Delete"/>
+            <column name="category" value="DELETE"/>
+        </insert>
+
+    </changeSet>
+</databaseChangeLog>
