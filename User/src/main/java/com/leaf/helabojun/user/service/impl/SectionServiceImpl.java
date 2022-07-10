@@ -83,7 +83,7 @@ public class SectionServiceImpl implements SectionService {
             Section section = sectionRepository.findByUuidAndStatusCodeNot(uuid, StatusEnum.DELETE.getCode())
                     .orElseThrow(() -> new DataNotFoundException(messageResource.getMessage(MessageConstant.SECTION_NOT_FOUND)));
 
-            if (sectionRepository.findByDescriptionAndStatusCodeNot(sectionDTO.getDescription(), StatusEnum.DELETE.getCode()).isPresent())
+            if (!sectionRepository.findByDescriptionAndStatusCodeNot(sectionDTO.getDescription(), StatusEnum.DELETE.getCode()).orElse(new Section()).getId().equals(section.getId()))
                 throw new DataConflictException(messageResource.getMessage(MessageConstant.SECTION_EXISTS, new Object[]{sectionDTO.getDescription()}));
 
             String previousSectionDescription = section.getDescription();
@@ -196,7 +196,7 @@ public class SectionServiceImpl implements SectionService {
 
     private SectionDTO mapToDto(Section section){
         SectionDTO sectionDTO = modelMapper.map(section, SectionDTO.class);
-        sectionDTO.setStatus(section.getStatus().getDescription());
+        sectionDTO.setStatus(section.getStatus().getCode());
         return sectionDTO;
     }
 }
