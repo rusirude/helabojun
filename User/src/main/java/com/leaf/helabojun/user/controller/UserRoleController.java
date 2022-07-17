@@ -5,10 +5,12 @@ import com.leaf.helabojun.user.dto.UserRoleDTO;
 import com.leaf.helabojun.user.dto.common.SearchRequestDTO;
 import com.leaf.helabojun.user.enums.ChannelEnum;
 import com.leaf.helabojun.user.service.UserRoleService;
+import com.leaf.helabojun.user.validator.group.ValidationGroupOne;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,12 +26,12 @@ public class UserRoleController {
     }
 
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> saveUserRole(@RequestBody UserRoleDTO userRoleDTO, @RequestParam String username) {
+    public ResponseEntity<Object> saveUserRole(@Validated(ValidationGroupOne.class) @RequestBody UserRoleDTO userRoleDTO, @RequestParam String username) {
         return ResponseEntity.ok().body(userRoleService.saveUserRole(ChannelEnum.WEB, username, userRoleDTO));
     }
 
     @PutMapping(value = "/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateUserRole(@PathVariable String uuid, @RequestBody UserRoleDTO userRoleDTO, @RequestParam String username) {
+    public ResponseEntity<Object> updateUserRole(@PathVariable String uuid, @Validated(ValidationGroupOne.class) @RequestBody UserRoleDTO userRoleDTO, @RequestParam String username) {
         return ResponseEntity.ok().body(userRoleService.updateUserRole(ChannelEnum.WEB, uuid, userRoleDTO, username));
     }
 
