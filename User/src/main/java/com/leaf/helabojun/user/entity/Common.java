@@ -5,9 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,18 +14,14 @@ public class Common {
 
     @Column(name = "created_by", nullable = false, length = 25)
     private String createdBy;
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_time", nullable = false)
-    private Date createdTime;
-    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime createdTime;
     @Column(name = "created_sys_time", nullable = false)
-    private Date createdSysTime;
+    private LocalDateTime createdSysTime;
     @Column(name = "updated_by", nullable = false, length = 25)
     private String updatedBy;
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_time", nullable = false)
-    private Date updatedTime;
-    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime updatedTime;
     @Column(name = "updated_sys_time", nullable = false)
-    private Date updatedSysTime;
+    private LocalDateTime updatedSysTime;
 }

@@ -5,10 +5,12 @@ import com.leaf.helabojun.user.dto.SectionDTO;
 import com.leaf.helabojun.user.dto.common.SearchRequestDTO;
 import com.leaf.helabojun.user.enums.ChannelEnum;
 import com.leaf.helabojun.user.service.SectionService;
+import com.leaf.helabojun.user.validator.group.ValidationGroupOne;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,12 +26,12 @@ public class SectionController {
     }
 
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> saveSection(@RequestBody SectionDTO sectionDTO, @RequestParam String username) {
+    public ResponseEntity<Object> saveSection(@Validated(ValidationGroupOne.class) @RequestBody SectionDTO sectionDTO, @RequestParam String username) {
         return ResponseEntity.ok().body(sectionService.saveSection(ChannelEnum.WEB, username, sectionDTO));
     }
 
     @PutMapping(value = "/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateSection(@PathVariable String uuid, @RequestBody SectionDTO sectionDTO, @RequestParam String username) {
+    public ResponseEntity<Object> updateSection(@PathVariable String uuid, @Validated(ValidationGroupOne.class) @RequestBody SectionDTO sectionDTO, @RequestParam String username) {
         return ResponseEntity.ok().body(sectionService.updateSection(ChannelEnum.WEB, uuid, sectionDTO, username));
     }
 
