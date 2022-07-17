@@ -5,10 +5,12 @@ import com.leaf.helabojun.user.dto.LocationTypeDTO;
 import com.leaf.helabojun.user.dto.common.SearchRequestDTO;
 import com.leaf.helabojun.user.enums.ChannelEnum;
 import com.leaf.helabojun.user.service.LocationTypeService;
+import com.leaf.helabojun.user.validator.group.ValidationGroupOne;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,12 +26,12 @@ public class LocationTypeController {
     }
 
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> saveLocationType(@RequestBody LocationTypeDTO locationTypeDTO, @RequestParam String username) {
+    public ResponseEntity<Object> saveLocationType(@Validated(ValidationGroupOne.class) @RequestBody LocationTypeDTO locationTypeDTO, @RequestParam String username) {
         return ResponseEntity.ok().body(locationTypeService.saveLocationType(ChannelEnum.WEB, username, locationTypeDTO));
     }
 
     @PutMapping(value = "/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateLocationType(@PathVariable String uuid, @RequestBody LocationTypeDTO locationTypeDTO, @RequestParam String username) {
+    public ResponseEntity<Object> updateLocationType(@PathVariable String uuid, @Validated(ValidationGroupOne.class) @RequestBody LocationTypeDTO locationTypeDTO, @RequestParam String username) {
         return ResponseEntity.ok().body(locationTypeService.updateLocationType(ChannelEnum.WEB, uuid, locationTypeDTO, username));
     }
 
