@@ -4,6 +4,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <property name="author-rusiru" value="rusiru"/>
+    <property name="user-table-name" value="cubis"/>
 
     <property name="now" value="now()" dbms="mysql"/>
     <property name="now" value="now()" dbms="h2"/>
@@ -16,6 +17,9 @@
 
     <property name="uuidType" value="varchar(40)" dbms="mysql"/>
     <property name="uuidType" value="varchar(40)" dbms="h2"/>
+
+    <property name="booleanType" value="boolean" dbms="mysql"/>
+    <property name="booleanType" value="BOOLEAN" dbms="h2"/>
 
     <changeSet id="1.0.0" author="${author-rusiru}">
         <createTable tableName="status">
@@ -144,5 +148,172 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+    <changeSet id="1.0.4" author="${author-rusiru}">
+        <createTable tableName="location">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="uuid" type="${uuidType}">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="description" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(10)">
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_location_status"
+                        referencedTableName="status"
+                        referencedColumnNames="code"/>
+            </column>
+            <column name="location_type" type="int">
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_location_location_type"
+                        referencedTableName="location_type"
+                        referencedColumnNames="id"/>
+            </column>
+            <column name="latitude" type="number(10,6)"/>
+            <column name="longitude" type="number(10,6)"/>
+            <column name="in_charge" type="int"/>
+            <column name="created_by" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="${dateType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_sys_time" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="${dateType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_sys_time" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.5" author="${author-rusiru}">
+        <createTable tableName="title">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="uuid" type="${uuidType}">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="description" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(10)">
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_title_status"
+                        referencedTableName="status"
+                        referencedColumnNames="code"/>
+            </column>
+            <column name="created_by" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="${dateType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_sys_time" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="${dateType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_sys_time" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.6" author="${author-rusiru}">
+        <createTable tableName="${user-table-name}">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="uuid" type="${uuidType}">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="int">
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_user_title"
+                        referencedTableName="title"
+                        referencedColumnNames="id"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(10)">
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_user_status"
+                        referencedTableName="status"
+                        referencedColumnNames="code"/>
+            </column>
+            <column name="user_role" type="int">
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_user_user_role"
+                        referencedTableName="user_role"
+                        referencedColumnNames="id"/>
+            </column>
+            <column name="location" type="int">
+                <constraints
+                        nullable="false"
+                        foreignKeyName="fk_user_location"
+                        referencedTableName="location"
+                        referencedColumnNames="id"/>
+            </column>
+            <column name="first_login" type="${booleanType}" defaultValue="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="system_user" type="${booleanType}" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="${dateType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_sys_time" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="${dateType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_sys_time" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1.0.7" author="${author-rusiru}">
+        <addForeignKeyConstraint
+                baseTableName="location"
+                baseColumnNames="in_charge"
+                constraintName="fk_location_in_charge_user"
+                referencedTableName="${user-table-name}"
+                referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

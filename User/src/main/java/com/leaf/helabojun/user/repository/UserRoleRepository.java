@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.Optional;
 
 public interface UserRoleRepository extends JpaRepository<UserRole, Long>, JpaSpecificationExecutor<UserRole> {
-    Optional<UserRole> findByDescriptionAndStatusNot(String description, String status);
+    Optional<UserRole> findByDescriptionAndStatusCodeNot(String description, String status);
 
-    Optional<UserRole> findByUuidAndStatusNot(String uuid, String status);
+    Optional<UserRole> findByUuidAndStatusCodeNot(String uuid, String status);
 }

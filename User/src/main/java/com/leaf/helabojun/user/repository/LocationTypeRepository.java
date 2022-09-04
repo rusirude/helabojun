@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.Optional;
 
 public interface LocationTypeRepository extends JpaRepository<LocationType, Long>, JpaSpecificationExecutor<LocationType> {
-    Optional<LocationType> findByDescriptionAndStatusNot(String description, String status);
+    Optional<LocationType> findByDescriptionAndStatusCodeNot(String description, String status);
 
-    Optional<LocationType> findByUuidAndStatusNot(String uuid, String status);
+    Optional<LocationType> findByUuidAndStatusCodeNot(String uuid, String status);
 }

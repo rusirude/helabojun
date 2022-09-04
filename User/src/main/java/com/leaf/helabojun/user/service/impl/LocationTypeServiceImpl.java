@@ -17,6 +17,7 @@ import com.leaf.helabojun.user.service.LocationTypeService;
 import com.leaf.helabojun.user.utility.CommonFunction;
 import com.leaf.helabojun.user.utility.MessageConstant;
 import com.leaf.helabojun.user.utility.MessageResource;
+import com.leaf.helabojun.user.utility.StatusUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -38,6 +39,7 @@ public class LocationTypeServiceImpl implements LocationTypeService {
     private ModelMapper modelMapper;
     private CommonFunction commonFunction;
     private MessageResource messageResource;
+    private StatusUtil  statusUtil;
 
     private LocationTypeRepository locationTypeRepository;
     private LocationTypeSpecification locationTypeSpecification;
@@ -47,7 +49,7 @@ public class LocationTypeServiceImpl implements LocationTypeService {
     public ResponseDTO<String, LocationTypeDTO> saveLocationType(ChannelEnum channel, String username, LocationTypeDTO locationTypeDTO) {
         try {
 
-            LocationType locationType = locationTypeRepository.findByDescriptionAndStatusNot(locationTypeDTO.getDescription(), StatusEnum.DELETE.getCode())
+            LocationType locationType = locationTypeRepository.findByDescriptionAndStatusCodeNot(locationTypeDTO.getDescription(), StatusEnum.DELETE.getCode())
                     .orElse(new LocationType());
             if (Objects.nonNull(locationType.getId()))
                 throw new DataConflictException(messageResource.getMessage(MessageConstant.LOCATION_TYPE_EXISTS, new Object[]{locationTypeDTO.getDescription()}));
@@ -77,15 +79,15 @@ public class LocationTypeServiceImpl implements LocationTypeService {
     public ResponseDTO<String, LocationTypeDTO> updateLocationType(ChannelEnum channel, String uuid, LocationTypeDTO locationTypeDTO, String username) {
         try {
 
-            LocationType locationType = locationTypeRepository.findByUuidAndStatusNot(uuid, StatusEnum.DELETE.getCode())
+            LocationType locationType = locationTypeRepository.findByUuidAndStatusCodeNot(uuid, StatusEnum.DELETE.getCode())
                     .orElseThrow(() -> new DataNotFoundException(messageResource.getMessage(MessageConstant.LOCATION_TYPE_NOT_FOUND)));
 
-            if (locationTypeRepository.findByDescriptionAndStatusNot(locationTypeDTO.getDescription(), StatusEnum.DELETE.getCode()).isPresent())
+            if (locationTypeRepository.findByDescriptionAndStatusCodeNot(locationTypeDTO.getDescription(), StatusEnum.DELETE.getCode()).isPresent())
                 throw new DataConflictException(messageResource.getMessage(MessageConstant.LOCATION_TYPE_EXISTS, new Object[]{locationTypeDTO.getDescription()}));
 
             String previousLocationTypeDescription = locationType.getDescription();
             locationType.setDescription(locationTypeDTO.getDescription());
-            locationType.setStatus(locationTypeDTO.getStatus());
+            locationType.setStatus(statusUtil.getStatus(locationTypeDTO.getStatus()));
 
             commonFunction.populateUpdate(locationType, username);
             locationTypeRepository.save(locationType);
@@ -110,10 +112,10 @@ public class LocationTypeServiceImpl implements LocationTypeService {
     public ResponseDTO<String, LocationTypeDTO> deleteLocationType(ChannelEnum channel, String uuid, String username) {
         try {
 
-            LocationType locationType = locationTypeRepository.findByUuidAndStatusNot(uuid, StatusEnum.DELETE.getCode())
+            LocationType locationType = locationTypeRepository.findByUuidAndStatusCodeNot(uuid, StatusEnum.DELETE.getCode())
                     .orElseThrow(() -> new DataNotFoundException(messageResource.getMessage(MessageConstant.LOCATION_TYPE_NOT_FOUND)));
 
-            locationType.setStatus(StatusEnum.DELETE.getCode());
+            locationType.setStatus(statusUtil.getStatus(StatusEnum.DELETE.getCode()));
             commonFunction.populateUpdate(locationType, username);
             locationTypeRepository.save(locationType);
 
@@ -136,7 +138,7 @@ public class LocationTypeServiceImpl implements LocationTypeService {
     public ResponseDTO<String, LocationTypeDTO> findLocationType(ChannelEnum channel, String uuid) {
         try {
 
-            LocationType locationType = locationTypeRepository.findByUuidAndStatusNot(uuid, StatusEnum.DELETE.getCode())
+            LocationType locationType = locationTypeRepository.findByUuidAndStatusCodeNot(uuid, StatusEnum.DELETE.getCode())
                     .orElseThrow(() -> new DataNotFoundException(messageResource.getMessage(MessageConstant.LOCATION_TYPE_NOT_FOUND)));
 
             return new ResponseDTO<>(

@@ -14,10 +14,13 @@ public class Location extends Common{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
     @Column(name = "description", nullable = false)
     private String description;
-    @Column(name = "status", nullable = false)
-    private String status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status", nullable = false)
+    private Status status;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_type", nullable = false)
     private LocationType locationType;

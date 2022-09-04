@@ -18,6 +18,7 @@ import com.leaf.helabojun.user.service.UserRoleService;
 import com.leaf.helabojun.user.utility.CommonFunction;
 import com.leaf.helabojun.user.utility.MessageConstant;
 import com.leaf.helabojun.user.utility.MessageResource;
+import com.leaf.helabojun.user.utility.StatusUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -39,6 +40,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     private ModelMapper modelMapper;
     private CommonFunction commonFunction;
     private MessageResource messageResource;
+    private StatusUtil statusUtil;
 
     private UserRoleRepository userRoleRepository;
     private UserRoleSpecification userRoleSpecification;
@@ -49,7 +51,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     public ResponseDTO<String, UserRoleDTO> saveUserRole(ChannelEnum channel, String username, UserRoleDTO userRoleDTO) {
         try {
 
-            UserRole userRole = userRoleRepository.findByDescriptionAndStatusNot(userRoleDTO.getDescription(), StatusEnum.DELETE.getCode())
+            UserRole userRole = userRoleRepository.findByDescriptionAndStatusCodeNot(userRoleDTO.getDescription(), StatusEnum.DELETE.getCode())
                     .orElse(new UserRole());
             if (Objects.nonNull(userRole.getId()))
                 throw new DataConflictException(messageResource.getMessage(MessageConstant.USER_ROLE_EXISTS, new Object[]{userRoleDTO.getDescription()}));
@@ -79,15 +81,15 @@ public class UserRoleServiceImpl implements UserRoleService {
     public ResponseDTO<String, UserRoleDTO> updateUserRole(ChannelEnum channel, String uuid, UserRoleDTO userRoleDTO, String username) {
         try {
 
-            UserRole userRole = userRoleRepository.findByUuidAndStatusNot(uuid, StatusEnum.DELETE.getCode())
+            UserRole userRole = userRoleRepository.findByUuidAndStatusCodeNot(uuid, StatusEnum.DELETE.getCode())
                     .orElseThrow(() -> new DataNotFoundException(messageResource.getMessage(MessageConstant.USER_ROLE_NOT_FOUND)));
 
-            if (userRoleRepository.findByDescriptionAndStatusNot(userRoleDTO.getDescription(), StatusEnum.DELETE.getCode()).isPresent())
+            if (userRoleRepository.findByDescriptionAndStatusCodeNot(userRoleDTO.getDescription(), StatusEnum.DELETE.getCode()).isPresent())
                 throw new DataConflictException(messageResource.getMessage(MessageConstant.USER_ROLE_EXISTS, new Object[]{userRoleDTO.getDescription()}));
 
             String previousUserRoleDescription = userRole.getDescription();
             userRole.setDescription(userRoleDTO.getDescription());
-            userRole.setStatus(userRoleDTO.getStatus());
+            userRole.setStatus(statusUtil.getStatus(userRoleDTO.getStatus()));
 
             commonFunction.populateUpdate(userRole, username);
             userRoleRepository.save(userRole);
@@ -112,13 +114,13 @@ public class UserRoleServiceImpl implements UserRoleService {
     public ResponseDTO<String, UserRoleDTO> deleteUserRole(ChannelEnum channel, String uuid, String username) {
         try {
 
-            UserRole userRole = userRoleRepository.findByUuidAndStatusNot(uuid, StatusEnum.DELETE.getCode())
+            UserRole userRole = userRoleRepository.findByUuidAndStatusCodeNot(uuid, StatusEnum.DELETE.getCode())
                     .orElseThrow(() -> new DataNotFoundException(messageResource.getMessage(MessageConstant.USER_ROLE_NOT_FOUND)));
 
             if (userRepository.countByStatusNot(StatusEnum.DELETE.getCode()) > 0)
                 throw new DataConflictException(messageResource.getMessage(MessageConstant.USER_ROLE_USED_BY_USER, new Object[]{userRole.getDescription()}));
 
-            userRole.setStatus(StatusEnum.DELETE.getCode());
+            userRole.setStatus(statusUtil.getStatus(StatusEnum.DELETE.getCode()));
             commonFunction.populateUpdate(userRole, username);
             userRoleRepository.save(userRole);
 
@@ -141,7 +143,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     public ResponseDTO<String, UserRoleDTO> findUserRole(ChannelEnum channel, String uuid) {
         try {
 
-            UserRole userRole = userRoleRepository.findByUuidAndStatusNot(uuid, StatusEnum.DELETE.getCode())
+            UserRole userRole = userRoleRepository.findByUuidAndStatusCodeNot(uuid, StatusEnum.DELETE.getCode())
                     .orElseThrow(() -> new DataNotFoundException(messageResource.getMessage(MessageConstant.USER_ROLE_NOT_FOUND)));
 
             return new ResponseDTO<>(
